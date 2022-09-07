@@ -1,5 +1,4 @@
 use clap::Parser;
-use colored::Colorize;
 use regex::Regex;
 use std::{
     fs::File,
@@ -48,14 +47,14 @@ fn main() -> Result<(), AppErr> {
 
     for (idx, line) in reader.lines().enumerate() {
         let line = line?;
+        let mut new_line = line.clone();
+        re.captures_iter(&line).for_each(|caps| {
+            let _match = &caps[0];
+
+            new_line = line.replace(_match, &format!("\x1b[31;4m{}\x1b[0m", _match));
+        });
+
         if re.is_match(&line) {
-            let mut new_line = line.clone();
-            re.captures_iter(&line).for_each(|caps| {
-                let keyword = &caps[0];
-                println!("{}", &format!("{}", keyword).underline());
-                new_line = line.replace(keyword, &format!("{}", keyword).underline());
-            });
-            // let line = format!("{}", line).underline().red().bold();
             if args.lines {
                 println!("[{idx}] {}", new_line);
             } else {
