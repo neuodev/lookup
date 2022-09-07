@@ -1,4 +1,5 @@
 use clap::Parser;
+use colored::Colorize;
 use regex::Regex;
 use std::{
     fs::File,
@@ -17,8 +18,8 @@ struct Args {
     /// Regular experssion
     #[clap(short, long, value_parser)]
     regex: String,
-    ///
-    #[clap(short, long, default_value_t = false)]
+    /// Show lines by index
+    #[clap(short, long)]
     lines: bool,
 }
 
@@ -47,15 +48,18 @@ fn main() -> Result<(), AppErr> {
 
     for (idx, line) in reader.lines().enumerate() {
         let line = line?;
-        // re.captures_iter(&(line?)).for_each(|caps| {
-        //     println!("{:?}", caps);
-        // });
-
         if re.is_match(&line) {
+            let mut new_line = line.clone();
+            re.captures_iter(&line).for_each(|caps| {
+                let keyword = &caps[0];
+                println!("{}", &format!("{}", keyword).underline());
+                new_line = line.replace(keyword, &format!("{}", keyword).underline());
+            });
+            // let line = format!("{}", line).underline().red().bold();
             if args.lines {
-                println!("[{idx}] {line}");
+                println!("[{idx}] {}", new_line);
             } else {
-                println!("{line}");
+                println!("{}", new_line);
             }
         }
     }
