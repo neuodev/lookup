@@ -6,6 +6,12 @@ Search text files using regular expression
     <img src="./lookup.png" src="Lookup" alt="Lookup"/>
 </p>
 
+## Preview
+
+<p align="center">
+    <img src="./lookup.gif" src="Lookup" alt="Lookup"/>
+</p>
+
 ## Usage
 
 ```bash
